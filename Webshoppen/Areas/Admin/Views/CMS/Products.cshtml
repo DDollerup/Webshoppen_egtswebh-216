@@ -1,0 +1,55 @@
+﻿@model List<ProductVM>
+@{
+    ViewBag.Title = "Products";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2>Products</h2>
+    </div>
+    <div class="col-12">
+        <table>
+            <tr>
+                <th>
+                    ID
+                </th>
+                <th>
+                    Image
+                </th>
+                <th>
+                    Product Name
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <a href="/Admin/CMS/AddProduct">Add Product</a>
+                </td>
+            </tr>
+            @foreach (ProductVM vm in Model)
+            {
+                <tr>
+                    <td>
+                        @vm.Product.ID
+                    </td>
+                    <td>
+                        @vm.Product.Name
+                    </td>
+                    <td>
+                        @vm.Category.Name
+                    </td>
+                    <td>
+                        <a href="/Home/ShowProduct/@vm.Product.ID" target="_blank">View</a>
+                        <a href="#">Edit</a>
+                        <a href="#">Delete</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

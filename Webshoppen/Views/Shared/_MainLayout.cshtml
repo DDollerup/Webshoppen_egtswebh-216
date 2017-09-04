@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/CSS/main-columns.css" rel="stylesheet" />
+    <link href="~/Content/CSS/main.css" rel="stylesheet" />
+    @RenderSection("CSS", false)
+</head>
+<body>
+    <header>
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+                    <div class="col-2">
+                        <img src="http://via.placeholder.com/150x70" class="img-responsive" />
+                    </div>
+                    <div class="col-8">
+                        <h1>
+                            Webshoppen
+                        </h1>
+                    </div>
+                    <div class="col-2">
+                        <div id="main-shoppingCart">
+                            <a href="/Home/Cart">Shopping Cart [@ViewBag.AmountInCart]</a>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <nav class="col-6">
+                        <ul>
+                            <li>
+                                <a href="/Home/Index">Forside</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="/Home/Categories">Produkter</a>
+                                @Html.Action("PartialShowCategories", "Home")
+                            </li>
+                            <li>
+                                <a href="/Home/About">Om</a>
+                            </li>
+                            <li>
+                                <a href="#">Kontakt</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="col-6">
+                        <div id="main-search">
+                            <form action="/Home/SearchSubmit" method="post">
+                                <input type="text" name="searchInput" placeholder="Search..." required />
+                                <input type="submit" value="Search" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container-fluid">
+            <div class="container">
+                @RenderBody()
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+                    <div class="col-4">
+                        &copy; Webshoppen @DateTime.Now.Year
+                    </div>
+                    <div class="col-4">
+                        <a href="#">Handelsbetingelser</a>
+                    </div>
+                    <div class="col-4">
+                        Powered By &copy;Viden Djurs
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    @RenderSection("JS", false)
+</body>
+</html>

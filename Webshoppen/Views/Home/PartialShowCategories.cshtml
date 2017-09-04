@@ -1,0 +1,9 @@
+﻿@model List<CategoryVM>
+<ul class="dropdown-content">
+    @foreach (CategoryVM vm in Model)
+    {
+        <li>
+            <a href="/Home/Products/@vm.Category.ID">@vm.Category.Name</a>
+        </li>
+    }
+</ul>

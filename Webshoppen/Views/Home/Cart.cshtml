@@ -1,0 +1,78 @@
+﻿@model List<ProductVM>
+@{
+    ViewBag.Title = "Cart";
+    double freight = 29.00d;
+}
+<div class="row">
+    <div class="col-8">
+        <table id="shoppingCartTable">
+            <tr>
+                <th>
+                    Product Name
+                </th>
+                <th>
+                    Product Image
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+            @foreach (ProductVM vm in Model)
+            {
+                <tr>
+                    <td>
+                        @vm.Product.Name
+                    </td>
+                    <td>
+                        <img class="img-responsive" src="~/Content/Images/@vm.Images[0].ImageURL" />
+                    </td>
+                    <td>
+                        <a href="/Home/RemoveFromCart/@vm.Product.ID">Remove</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="col-4">
+        <table>
+            <tr>
+                <td>
+                    Sub Price
+                </td>
+                <td>
+                    @ViewBag.ShoppingCartTotal DKK
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Frieght
+                </td>
+                <td>
+                    @freight DKK
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Total
+                </td>
+                <td>
+                    @(ViewBag.ShoppingCartTotal + freight) DKK
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    (VAT)
+                </td>
+                <td>
+                    @(((double)ViewBag.ShoppingCartTotal) * 0.25d) DKK
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <a href="#">Checkout</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+

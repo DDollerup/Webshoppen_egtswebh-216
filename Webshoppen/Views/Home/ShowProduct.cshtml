@@ -1,0 +1,41 @@
+﻿@model ProductVM
+@{
+    ViewBag.Title = "ShowProduct";
+}
+
+<div class="row">
+    <div class="col-12">
+        <hr />
+        <span class="title"><b>@Model.Product.Name</b> | <i>@Model.Category.Name</i></span>
+        <hr />
+    </div>
+    <div class="col-9">
+        <img src="~/Content/Images/@Model.Images[0].ImageURL" class="img-responsive" />
+    </div>
+    <div class="col-3">
+        <table>
+            <tr>
+                <td>Product Name</td>
+                <td>@Model.Product.Name</td>
+            </tr>
+            <tr>
+                <td>Product Category</td>
+                <td>@Model.Category.Name</td>
+            </tr>
+            <tr>
+                <td>Product Description</td>
+                <td>@Html.Raw(Model.Product.Description)</td>
+            </tr>
+            <tr>
+                <td>Add to Cart</td>
+                <td>
+                    <form action="/Home/AddToCart" method="post">
+                        <input type="hidden" name="id" value="@Model.Product.ID" />
+                        <input type="number" min="1" max="99" value="1" name="amount" />
+                        <input type="submit" value="Add" />
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

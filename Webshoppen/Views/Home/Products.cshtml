@@ -1,0 +1,23 @@
+﻿@model List<ProductVM>
+@{
+    ViewBag.Title = "Products";
+}
+
+<div class="row">
+    @foreach (ProductVM vm in Model)
+    {
+        <div class="col-3">
+            <a href="/Home/ShowProduct/@vm.Product.ID">
+                <div>
+                    <p>
+                        @vm.Product.Name
+                    </p>
+                    <p>
+                        @vm.Category.Name
+                    </p>
+                    <img class="img-responsive" src="~/Content/Images/@vm.Images[0].ImageURL" />
+                </div>
+            </a>
+        </div>
+    }
+</div>
