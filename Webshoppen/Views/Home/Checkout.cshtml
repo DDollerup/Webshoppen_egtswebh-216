@@ -1,0 +1,385 @@
+﻿@model List<ProductVM>
+@{
+    ViewBag.Title = "Checkout";
+}
+
+<h2>Checkout</h2>
+
+@section CSS{
+    <style>
+        #bill-table {
+        }
+
+        #delivery-table {
+            display: none;
+        }
+
+        #customer-delivery {
+            display: none;
+        }
+    </style>
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h5>
+                Address
+            </h5>
+            <div class="row">
+                <div class="col-6">
+                    <!-- Billing Address -->
+                    <table id="bill-table">
+                        <tr>
+                            <td>
+                                Full Name
+                            </td>
+                            <td>
+                                <input type="text" placeholder="Full Name.." id="bill-fullname" onkeyup="fillField('#bill-fullname','#cinfo-fullname')" onchange="fillField('#bill-fullname','#cinfo-fullname')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Phone Number
+                            </td>
+                            <td>
+                                <input type="text" placeholder="Phone Number.." id="bill-phone" onkeyup="fillField('#bill-phone','#cinfo-phone')" onchange="fillField('#bill-phone','#cinfo-phone')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Email
+                            </td>
+                            <td>
+                                <input type="text" placeholder="Email.." id="bill-email" onkeyup="fillField('#bill-email','#cinfo-email')" onchange="fillField('#bill-email','#cinfo-email')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Address
+                            </td>
+                            <td>
+                                <input type="text" placeholder="Address.." id="bill-address" onkeyup="fillField('#bill-address','#cinfo-address')" onchange="fillField('#bill-address','#cinfo-address')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Postal Code
+                            </td>
+                            <td>
+                                <input type="text" placeholder="Postal.." id="bill-postal" onkeyup="fillField('#bill-postal','#cinfo-postal')" onchange="fillField('#bill-postal','#cinfo-postal')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                City
+                            </td>
+                            <td>
+                                <input type="text" placeholder="City.." id="bill-city" onkeyup="fillField('#bill-city','#cinfo-city')" onchange="fillField('#bill-city','#cinfo-city')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Different from Billing Address?
+                            </td>
+                            <td>
+                                <input type="checkbox" id="bill-differentFromBilling" onchange="differentFromDelivery()" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-6">
+                    <!-- Delivery Address -->
+                    <table id="delivery-table">
+                        <tr>
+                            <td>
+                                Full Name
+                            </td>
+                            <td>
+                                <input type="text" placeholder="Full Name.." id="delivery-fullname" onkeyup="fillField('#delivery-fullname','#dinfo-fullname')" onchange="fillField('#delivery-fullname','#dinfo-fullname')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Phone Number
+                            </td>
+                            <td>
+                                <input type="text" placeholder="Phone Number.." id="delivery-phone" onkeyup="fillField('#delivery-phone','#dinfo-phone')" onchange="fillField('#delivery-phone','#dinfo-phone')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Email
+                            </td>
+                            <td>
+                                <input type="text" placeholder="Email.." id="delivery-email" onkeyup="fillField('#delivery-email','#dinfo-email')" onchange="fillField('#delivery-email','#dinfo-email')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Address
+                            </td>
+                            <td>
+                                <input type="text" placeholder="Address.." id="delivery-address" onkeyup="fillField('#delivery-address','#dinfo-address')" onchange="fillField('#delivery-address','#dinfo-address')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Postal Code
+                            </td>
+                            <td>
+                                <input type="text" placeholder="Postal.." id="delivery-postal" onkeyup="fillField('#delivery-postal','#dinfo-postal')" onchange="fillField('#delivery-postal','#dinfo-postal')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                City
+                            </td>
+                            <td>
+                                <input type="text" placeholder="City.." id="delivery-city" onkeyup="fillField('#delivery-city','#dinfo-city')" onchange="fillField('#delivery-city','#dinfo-city')" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h5>
+                Order Confirmation
+            </h5>
+            <div class="row">
+                <div class="col-12">
+                    <h6>
+                        Customer Information
+                    </h6>
+                </div>
+                <div class="col-6">
+                    <table id="customer-bill">
+                        <tr>
+                            <td>
+                                Full Name
+                            </td>
+                            <td>
+                                <span id="cinfo-fullname"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Phone Number
+                            </td>
+                            <td>
+                                <span id="cinfo-phone"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Email
+                            </td>
+                            <td>
+                                <span id="cinfo-email"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Address
+                            </td>
+                            <td>
+                                <span id="cinfo-address"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Postal Code
+                            </td>
+                            <td>
+                                <span id="cinfo-postal"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                City
+                            </td>
+                            <td>
+                                <span id="cinfo-city"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-6">
+                    <table id="customer-delivery">
+                        <tr>
+                            <td>
+                                Full Name
+                            </td>
+                            <td>
+                                <span id="dinfo-fullname"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Phone Number
+                            </td>
+                            <td>
+                                <span id="dinfo-phone"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Email
+                            </td>
+                            <td>
+                                <span id="dinfo-email"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Address
+                            </td>
+                            <td>
+                                <span id="dinfo-address"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Postal Code
+                            </td>
+                            <td>
+                                <span id="dinfo-postal"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                City
+                            </td>
+                            <td>
+                                <span id="dinfo-city"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <h6>
+                Products
+            </h6>
+            <table>
+                <tr>
+                    <th>
+                        Image
+                    </th>
+                    <th>
+                        Product Name
+                    </th>
+                    <th>
+                        Pice
+                    </th>
+                </tr>
+                @foreach (ProductVM vm in Model)
+                {
+                <tr>
+                    <td>
+                        <img class="img-responsive" src="~/Content/Images/@vm.Images[0].ImageURL" />
+                    </td>
+                    <td>
+                        <strong>@vm.Product.Name</strong>
+                    </td>
+                    <td>
+                        <strong>@vm.Product.GetPrice()</strong>
+                    </td>
+                </tr>
+                }
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form action="/Home/CheckoutSubmit" method="post" id="checkout-form">
+                <input type="hidden" name="Fullname" id="form-fullname" />
+                <input type="hidden" name="Phone" id="form-phone" />
+                <input type="hidden" name="Email" id="form-email" />
+                <input type="hidden" name="Address" id="form-address" />
+                <input type="hidden" name="Postal" id="form-postal" />
+                <input type="hidden" name="City" id="form-city" />
+
+                <input type="hidden" name="Fullname_Delivery" id="form-fullname-delivery" />
+                <input type="hidden" name="Phone_Delivery" id="form-phone-delivery" />
+                <input type="hidden" name="Email_Delivery" id="form-email-delivery" />
+                <input type="hidden" name="Address_Delivery" id="form-address-delivery" />
+                <input type="hidden" name="Postal_Delivery" id="form-postal-delivery" />
+                <input type="hidden" name="City_Delivery" id="form-city-delivery" />
+
+                @foreach (ProductVM vm in Model)
+                {
+                    <input type="hidden" name="ProductIDs" value="@vm.Product.ID" />
+                }
+
+                <input type="button" value="Done" onclick="finishCheckout()" />
+            </form>
+        </div>
+    </div>
+</div>
+
+@section JS {
+    <script>
+        var showDelivery = false;
+
+        function differentFromDelivery() {
+            if (!showDelivery) {
+                $("#delivery-table").show();
+                $("#customer-delivery").show();
+                showDelivery = true;
+            }
+            else {
+                $("#delivery-table").hide();
+                $("#customer-delivery").hide();
+                showDelivery = false;
+            }
+        }
+
+        function fillField(from, target) {
+            var _from = $(from);
+            var _target = $(target);
+
+            _from.keyup(function () {
+                _target.html(_from.val());
+            })
+        }
+
+        function finishCheckout() {
+            var _form = $("#checkout-form");
+
+            var _fullname = $("#bill-fullname").val();
+            var _phone = $("#bill-phone").val();
+            var _email = $("#bill-email").val();
+            var _address = $("#bill-address").val();
+            var _postal = $("#bill-postal").val();
+            var _city = $("#bill-city").val();
+
+            var _fullname_delivery = $("#delivery-fullname").val();
+            var _phone_delivery = $("#delivery-phone").val();
+            var _email_delivery = $("#delivery-email").val();
+            var _address_delivery = $("#delivery-address").val();
+            var _postal_delivery = $("#delivery-postal").val();
+            var _city_delivery = $("#delivery-city").val();
+
+            $("#form-fullname").val(_fullname);
+            $("#form-phone").val(_phone);
+            $("#form-email").val(_email);
+            $("#form-address").val(_address);
+            $("#form-postal").val(_postal);
+            $("#form-city").val(_city);
+
+            $("#form-fullname-delivery").val(_fullname_delivery);
+            $("#form-phone-delivery").val(_phone_delivery);
+            $("#form-email-delivery").val(_email_delivery);
+            $("#form-address-delivery").val(_address_delivery);
+            $("#form-postal-delivery").val(_postal_delivery);
+            $("#form-city-delivery").val(_city_delivery);
+
+            _form.submit();
+        }
+    </script>
+}

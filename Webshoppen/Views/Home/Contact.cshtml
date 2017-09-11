@@ -3,5 +3,51 @@
     ViewBag.Title = "Contact";
 }
 
-<h2>Contact</h2>
-
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h5>Contact Us!</h5>
+            <div class="row">
+                <form action="/Home/ContactSubmit" method="post">
+                    <div class="col-6">
+                        <table>
+                            <tr>
+                                <td>Name</td>
+                                <td><input type="text" name="name" required /></td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td><input type="email" name="email" required /></td>
+                            </tr>
+                            <tr>
+                                <td>Subject</td>
+                                <td><input type="text" name="subject" required /></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-12">
+                                Messege
+                            </div>
+                            <div class="col-12">
+                                <textarea name="message" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <input type="submit" value="Send Message" />
+                    </div>
+                    @if (TempData["ContactMSG"] != null)
+                    {
+                        <div class="col-12">
+                            <p>
+                                @TempData["ContactMSG"]
+                            </p>
+                        </div>
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

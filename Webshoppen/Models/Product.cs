@@ -17,5 +17,14 @@ namespace Webshoppen.Models
         public double Price { get; set; }
         public double SalePrice { get; set; }
         public bool Active { get; set; }
+
+        public double GetPrice()
+        {
+            if (SalePrice < Price)
+            {
+                return SalePrice;
+            }
+            return Price;
+        }
     }
 }

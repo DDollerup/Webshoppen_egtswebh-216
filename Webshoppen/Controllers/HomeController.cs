@@ -18,15 +18,16 @@ namespace Webshoppen.Controllers
         // ShoppingCart
         ProductCart cart;
 
+
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             cart = new ProductCart(HttpContext, "ShoppingCart");
-            ViewBag.AmountInCart = cart.GetShoppingCart().Count;
+            ViewBag.AmountInCart = cart.Amount();
             ViewBag.ShoppingCartTotal = cart.Total;
             base.OnActionExecuting(filterContext);
         }
 
-        // GET: Home
+        #region Main
         public ActionResult Index()
         {
             return View();
@@ -114,7 +115,7 @@ namespace Webshoppen.Controllers
                 vm.Product = productFactory.Get(id);
                 vm.Images = imageFactory.GetBy("ProductID", id);
                 vm.Category = categoryFactory.Get(vm.Product.CategoryID);
-                return View(vm); 
+                return View(vm);
             }
             else
             {
@@ -140,38 +141,114 @@ namespace Webshoppen.Controllers
         }
 
         [HttpPost]
+        public ActionResult ContactSubmit(string name, string email, string subject, string message)
+        {
+            EmailClient emailClient = new EmailClient("smtp.gmail.com", 587, "webitumbraco@gmail.com", "FedeAbe2000", true);
+            emailClient.SendNotification(name, email, subject, message);
+            TempData["ContactMSG"] = "Din besked er blevet modtaget, se din mail for bekræftelse.";
+            return RedirectToAction("Contact");
+        }
+        #endregion
+
+        #region ShoppingCart
+        [HttpPost]
         public ActionResult AddToCart(int id, int amount)
         {
-            ProductVM vm = new ProductVM();
-            vm.Product = productFactory.Get(id);
-            vm.Images = imageFactory.GetBy("ProductID", id);
-            vm.Category = categoryFactory.Get(vm.Product.CategoryID);
 
-            for (int i = 0; i < amount; i++)
-            {
-                cart.Add(vm);
-            }
+            Product p = productFactory.Get(id);
+            cart.Add(p);
 
             return Redirect(Request.UrlReferrer.ToString());
         }
 
         public ActionResult RemoveFromCart(int id)
         {
-            ProductVM vm = cart.GetShoppingCart().Find(x => x.Product.ID == id);
-            cart.Remove(vm);
+            Product p = productFactory.Get(id);
+            cart.Remove(p);
 
             return Redirect(Request.UrlReferrer.ToString());
         }
 
         public ActionResult Cart()
         {
-            return View(cart.GetShoppingCart());
+            List<List<ProductVM>> shoppingCartList = new List<List<ProductVM>>();
+
+            foreach (List<Product> productLine in cart.GetShoppingCart())
+            {
+                List<ProductVM> lvm = new List<ProductVM>();
+                foreach (Product product in productLine)
+                {
+                    ProductVM vm = new ProductVM();
+                    vm.Product = product;
+                    vm.Category = categoryFactory.Get(product.CategoryID);
+                    vm.Images = imageFactory.GetBy("ProductID", product.ID);
+                    lvm.Add(vm);
+                }
+                shoppingCartList.Add(lvm);
+            }
+            return View(shoppingCartList);
         }
 
         public ActionResult CartButton()
         {
-            ViewBag.AmountInCart = cart.GetShoppingCart().Count;
+            ViewBag.AmountInCart = cart.Amount();
             return PartialView();
         }
+        #endregion
+
+        #region Checkout
+        public ActionResult Checkout()
+        {
+            List<List<ProductVM>> shoppingCartList = new List<List<ProductVM>>();
+
+            foreach (List<Product> productLine in cart.GetShoppingCart())
+            {
+                List<ProductVM> lvm = new List<ProductVM>();
+                foreach (Product product in productLine)
+                {
+                    ProductVM vm = new ProductVM();
+                    vm.Product = product;
+                    vm.Category = categoryFactory.Get(product.CategoryID);
+                    vm.Images = imageFactory.GetBy("ProductID", product.ID);
+                    lvm.Add(vm);
+                }
+                shoppingCartList.Add(lvm);
+            }
+            return View(shoppingCartList);
+        }
+
+        [HttpPost]
+        public ActionResult CheckoutSubmit(Order order)
+        {
+            EmailClient emailClient = new EmailClient("smtp.gmail.com", 587, "webitumbraco@gmail.com", "FedeAbe2000", true);
+            //emailClient.SendEmail(order.Email);
+            //emailClient.SendNotification(order.Fullname, order.Email, Request.PhysicalApplicationPath + @"\EmailTemplates\Notification.html");
+
+            List<Product> productsInOrder = new List<Product>();
+            for (int i = 0; i < order.ProductIDs.Count; i++)
+            {
+                productsInOrder.Add(productFactory.Get(order.ProductIDs[i]));
+            }
+
+            List<ProductVM> products = new List<ProductVM>();
+            foreach (Product item in productsInOrder)
+            {
+                ProductVM productVM = new ProductVM();
+                productVM.Product = item;
+                productVM.Images = imageFactory.GetBy("ProductID", item.ID);
+                productVM.Category = categoryFactory.Get(item.CategoryID);
+
+                products.Add(productVM);
+            }
+
+            emailClient.SendInvoice(order, products);
+            return RedirectToAction("OrderConfirmation");
+        }
+
+        public ActionResult OrderConfirmation()
+        {
+            return View();
+        }
+        #endregion
     }
 }

@@ -12,7 +12,7 @@ namespace Webshoppen
         public static SqlConnection GetCon()
         {
             SqlConnection con = new SqlConnection(@"Data Source=DESKTOP-PJV0RDF\SQLEXPRESS;Initial Catalog=Webshoppen;Integrated Security=True");
-            //SqlConnection con = new SqlConnection(@"Data Source=sql.itcn.dk\VID;Initial Catalog=ddje.VID;Persist Security Info=True;User ID=ddje.VID;Password=3ny4EHFk07");
+            //SqlConnection con = new SqlConnection(@"Data Source=sql.itcn.dk\VID;Initial Catalog=ddje.VID;Persist Security Info=True;User ID=ddje.VID;Password=8V3Y58Muex");
             return con;
         }
 

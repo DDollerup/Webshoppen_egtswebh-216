@@ -98,6 +98,10 @@
     <Content Include="Content\Images\image4.jpg" />
     <Content Include="Content\Images\image3.jpg" />
     <Content Include="Content\Images\image2.jpg" />
+    <Content Include="EmailTemplates\Invoice_bottom.html" />
+    <Content Include="EmailTemplates\Invoice_top.html" />
+    <Content Include="EmailTemplates\NotificationToAdmin.html" />
+    <Content Include="EmailTemplates\Notification.html" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -117,13 +121,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\EmailClient.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\CategoryVM.cs" />
     <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShoppingCart\ProductCart.cs" />
+    <Compile Include="ShoppingCart\ShoppingCart _v2.cs" />
     <Compile Include="ShoppingCart\ShoppingCart.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +153,8 @@
     <Content Include="Views\Home\Cart.cshtml" />
     <Content Include="Views\Home\PartialShowCategories.cshtml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <Content Include="Views\Home\Checkout.cshtml" />
+    <Content Include="Views\Home\OrderConfirmation.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

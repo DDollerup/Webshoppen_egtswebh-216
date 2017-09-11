@@ -1,4 +1,4 @@
-﻿@model List<ProductVM>
+﻿@model List<List<ProductVM>>
 @{
     ViewBag.Title = "Cart";
     double freight = 29.00d;
@@ -14,20 +14,26 @@
                     Product Image
                 </th>
                 <th>
+                    Amount
+                </th>
+                <th>
                     Actions
                 </th>
             </tr>
-            @foreach (ProductVM vm in Model)
+            @foreach (List<ProductVM> listItem in Model)
             {
                 <tr>
                     <td>
-                        @vm.Product.Name
+                        @listItem[0].Product.Name;
                     </td>
                     <td>
-                        <img class="img-responsive" src="~/Content/Images/@vm.Images[0].ImageURL" />
+                        <img class="img-responsive" src="~/Content/Images/@listItem[0].Images[0].ImageURL" />
                     </td>
                     <td>
-                        <a href="/Home/RemoveFromCart/@vm.Product.ID">Remove</a>
+                        @listItem.Count();
+                    </td>
+                    <td>
+                        <a href="/Home/RemoveFromCart/@listItem[0].Product.ID">Remove</a>
                     </td>
                 </tr>
             }
@@ -69,7 +75,14 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <a href="#">Checkout</a>
+                    @if (Model.Count > 0)
+                    {
+                        <a href="/Home/Checkout">Checkout</a>
+                    }
+                    else
+                    {
+                        <span style="color:lightgray;">Checkout</span>
+                    }
                 </td>
             </tr>
         </table>
