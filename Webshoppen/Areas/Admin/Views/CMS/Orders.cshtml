@@ -1,0 +1,48 @@
+﻿@model List<OrderStatusVM>
+@{
+    ViewBag.Title = "Orders";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2>Orders</h2>
+        </div>
+        <div class="col-12">
+            <table>
+                <tr>
+                    <th>
+                        Order ID
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+                @foreach (OrderStatusVM vm in Model)
+                {
+                    <tr>
+                        <td>
+                            @vm.OrderStatus.OrderID
+                        </td>
+                        <td>
+                            @vm.OrderStatus.Date
+                        </td>
+                        <td>
+                            @vm.Status.CurrentStatus
+                        </td>
+                        <td>
+                            <a href="/Admin/CMS/ShowOrder/@vm.OrderStatus.OrderID">Read More...</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+

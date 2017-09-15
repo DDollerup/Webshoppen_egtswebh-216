@@ -1,4 +1,4 @@
-﻿@model List<ProductVM>
+﻿@model List<List<ProductVM>>
 @{
     ViewBag.Title = "Checkout";
 }
@@ -274,20 +274,26 @@
                         Product Name
                     </th>
                     <th>
+                        Amount
+                    </th>
+                    <th>
                         Pice
                     </th>
                 </tr>
-                @foreach (ProductVM vm in Model)
+                @foreach (List<ProductVM> list in Model)
                 {
                 <tr>
                     <td>
-                        <img class="img-responsive" src="~/Content/Images/@vm.Images[0].ImageURL" />
+                        <img class="img-responsive" src="~/Content/Images/@list[0].Images[0].ImageURL" />
                     </td>
                     <td>
-                        <strong>@vm.Product.Name</strong>
+                        <strong>@list[0].Product.Name</strong>
                     </td>
                     <td>
-                        <strong>@vm.Product.GetPrice()</strong>
+                        @list.Count();
+                    </td>
+                    <td>
+                        <strong>@list[0].Product.GetPrice()</strong>
                     </td>
                 </tr>
                 }
@@ -311,9 +317,9 @@
                 <input type="hidden" name="Postal_Delivery" id="form-postal-delivery" />
                 <input type="hidden" name="City_Delivery" id="form-city-delivery" />
 
-                @foreach (ProductVM vm in Model)
+                @foreach (List<ProductVM> list in Model)
                 {
-                    <input type="hidden" name="ProductIDs" value="@vm.Product.ID" />
+                    <input type="hidden" name="ProductIDs" value="@list[0].Product.ID" />
                 }
 
                 <input type="button" value="Done" onclick="finishCheckout()" />

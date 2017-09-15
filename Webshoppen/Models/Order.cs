@@ -7,6 +7,8 @@ namespace Webshoppen.Models
 {
     public class Order
     {
+
+        public int ID { get; set; }
         public string Fullname { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
@@ -21,6 +23,6 @@ namespace Webshoppen.Models
         public string Postal_Delivery { get; set; }
         public string City_Delivery { get; set; }
 
-        public List<int> ProductIDs { get; set; }
+        public List<int> ProductIDs = new List<int>();
     }
 }

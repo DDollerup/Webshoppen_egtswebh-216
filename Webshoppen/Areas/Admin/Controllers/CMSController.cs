@@ -10,9 +10,13 @@ namespace Webshoppen.Areas.Admin.Controllers
 {
     public class CMSController : Controller
     {
-        private ProductFactory productFactory = new ProductFactory();
-        private CategoryFactory categoryFactory = new CategoryFactory();
-        private ImageFactory imageFactory = new ImageFactory();
+        ProductFactory productFactory = new ProductFactory();
+        ImageFactory imageFactory = new ImageFactory();
+        CategoryFactory categoryFactory = new CategoryFactory();
+        OrderFactory orderFactory = new OrderFactory();
+        OrderCollectionFactory orderCollectionFactory = new OrderCollectionFactory();
+        StatusFactory statusFactory = new StatusFactory();
+        OrderStatusFactory orderStatusFactory = new OrderStatusFactory();
 
         // GET: Admin/CMS
         public ActionResult Index()
@@ -79,23 +83,72 @@ namespace Webshoppen.Areas.Admin.Controllers
             ViewBag.Images = imageFactory.GetBy("ProductID", 0);
             return View();
         }
-        
-        
+
+
         [HttpPost]
         public ActionResult AddProductSubmit(Product product, List<int> imageIDs)
         {
             int productID = productFactory.Insert(product);
 
-            for (int i = 0; i < imageIDs.Count; i++)
+            if (imageIDs != null)
             {
-                Image img = imageFactory.Get(imageIDs[i]);
-                img.ProductID = productID;
-                imageFactory.Update(img);
+                for (int i = 0; i < imageIDs.Count; i++)
+                {
+                    Image img = imageFactory.Get(imageIDs[i]);
+                    img.ProductID = productID;
+                    imageFactory.Update(img);
+                } 
             }
 
             TempData["MSG"] = "A product has been added.";
 
             return RedirectToAction("Products");
+        }
+        #endregion
+
+        #region Orders
+        public ActionResult Orders()
+        {
+            List<OrderStatusVM> orders = new List<OrderStatusVM>();
+
+            foreach (OrderStatus orderStatus in orderStatusFactory.GetAll())
+            {
+                OrderStatusVM vm = new OrderStatusVM();
+                vm.OrderStatus = orderStatus;
+                vm.Status = statusFactory.Get(orderStatus.StatusID);
+
+                orders.Add(vm);
+            }
+
+            return View(orders);
+        }
+
+        public ActionResult ShowOrder(int id = 0)
+        {
+            if (id == 0) return RedirectToAction("Orders");
+
+            List<ProductAmountVM> products = new List<ProductAmountVM>();
+            foreach (OrderCollection orderCollection in orderCollectionFactory.GetBy("OrderID", id))
+            {
+                ProductAmountVM pavm = new ProductAmountVM();
+
+                ProductVM productVM = new ProductVM();
+                productVM.Product = productFactory.Get(orderCollection.ProductID);
+                productVM.Images = imageFactory.GetBy("ProductID", productVM.Product.ID);
+                productVM.Category = categoryFactory.Get(productVM.Product.CategoryID);
+
+                pavm.ProductVM = productVM;
+                pavm.Amount = orderCollection.Amount;
+
+                products.Add(pavm);
+            }
+
+            OrderVM ovm = new OrderVM();
+            ovm.Order = orderFactory.Get(id);
+            ovm.Products = products;
+
+            return View(ovm);
+
         }
         #endregion
     }

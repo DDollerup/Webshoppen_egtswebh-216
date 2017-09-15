@@ -109,11 +109,11 @@ public class EmailClient
         return "<td>" + info + "</td>";
     }
 
-    public void SendInvoice(Order order, List<ProductVM> products)
+    public void SendInvoice(Order order, List<ProductAmountVM> products)
     {
         string htmlBody = ReadHtml(HostingEnvironment.ApplicationPhysicalPath + @"/EmailTemplates/Invoice_top.html");
 
-        htmlBody = htmlBody.Replace("{orderNumber}", "9999");
+        htmlBody = htmlBody.Replace("{orderNumber}", order.ID.ToString());
 
         htmlBody = htmlBody.Replace("{fullName}", order.Fullname);
         htmlBody = htmlBody.Replace("{phone}", order.Phone);
@@ -131,22 +131,32 @@ public class EmailClient
             htmlBody = htmlBody.Replace("{postal-delivery}", order.Postal_Delivery);
             htmlBody = htmlBody.Replace("{city-delivery}", order.City_Delivery);
         }
+        else
+        {
+            htmlBody = htmlBody.Replace("{fullName-delivery}", order.Fullname);
+            htmlBody = htmlBody.Replace("{phone-delivery}", order.Phone);
+            htmlBody = htmlBody.Replace("{email-delivery}", order.Email);
+            htmlBody = htmlBody.Replace("{address-delivery}", order.Address);
+            htmlBody = htmlBody.Replace("{postal-delivery}", order.Postal);
+            htmlBody = htmlBody.Replace("{city-delivery}", order.City);
+        }
 
         string productBody = "";
         double total = 0;
 
-        foreach (ProductVM vm in products)
+        foreach (ProductAmountVM vm in products)
         {
             productBody += TableRow(
-                TableData(vm.Product.Name) +
-                TableData(vm.Product.Description) +
-                TableData(vm.Product.Price.ToString())
+                TableData(vm.ProductVM.Product.Name) +
+                TableData(vm.ProductVM.Product.Description) +
+                TableData(vm.Amount.ToString()) +
+                TableData(vm.ProductVM.Product.Price.ToString())
                 );
-            total += vm.Product.GetPrice();
+            total += vm.Total();
         }
 
         productBody += TableRow(
-            "<td colspan='2'>Total</td>" +
+            "<td colspan='3'>Total</td>" +
             "<td>" + total + "</td>"
             );
 
@@ -161,7 +171,7 @@ public class EmailClient
         mail.Body = htmlBody;
         mail.From = new MailAddress(_systemMail);
         mail.To.Add(new MailAddress(order.Email));
-        mail.Subject = "Invoice for Ordernumber: 9999";
+        mail.Subject = "Invoice for Ordernumber: " + order.ID;
 
         mailClient.Send(mail);
     }

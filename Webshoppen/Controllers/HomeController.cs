@@ -14,6 +14,10 @@ namespace Webshoppen.Controllers
         ProductFactory productFactory = new ProductFactory();
         ImageFactory imageFactory = new ImageFactory();
         CategoryFactory categoryFactory = new CategoryFactory();
+        OrderFactory orderFactory = new OrderFactory();
+        OrderCollectionFactory orderCollectionFactory = new OrderCollectionFactory();
+        StatusFactory statusFactory = new StatusFactory();
+        OrderStatusFactory orderStatusFactory = new OrderStatusFactory();
 
         // ShoppingCart
         ProductCart cart;
@@ -220,33 +224,77 @@ namespace Webshoppen.Controllers
         [HttpPost]
         public ActionResult CheckoutSubmit(Order order)
         {
+            int orderID = orderFactory.Insert(order);
+            order.ID = orderID;
+
+            foreach (List<Product> cartListItem in cart.GetShoppingCart())
+            {
+                OrderCollection orderCollection = new OrderCollection();
+                orderCollection.OrderID = orderID;
+                orderCollection.ProductID = cartListItem[0].ID;
+                orderCollection.Amount = cartListItem.Count;
+
+                orderCollectionFactory.Insert(orderCollection);
+            }
+
+            OrderStatus orderStatus = new OrderStatus();
+            orderStatus.OrderID = orderID;
+            orderStatus.Date = DateTime.Today.ToShortDateString();
+            orderStatus.StatusID = 1;
+
+            orderStatusFactory.Insert(orderStatus);
+
+
+            #region Email
             EmailClient emailClient = new EmailClient("smtp.gmail.com", 587, "webitumbraco@gmail.com", "FedeAbe2000", true);
             //emailClient.SendEmail(order.Email);
             //emailClient.SendNotification(order.Fullname, order.Email, Request.PhysicalApplicationPath + @"\EmailTemplates\Notification.html");
 
-            List<Product> productsInOrder = new List<Product>();
-            for (int i = 0; i < order.ProductIDs.Count; i++)
-            {
-                productsInOrder.Add(productFactory.Get(order.ProductIDs[i]));
-            }
+            //List<Product> productsInOrder = new List<Product>();
+            //for (int i = 0; i < cart.GetShoppingCart().Count; i++)
+            //{
+            //    productsInOrder.Add(productFactory.Get(cart.GetShoppingCart()[i][0].ID));
+            //}
 
-            List<ProductVM> products = new List<ProductVM>();
-            foreach (Product item in productsInOrder)
+            //List<ProductVM> products = new List<ProductVM>();
+            //foreach (Product item in productsInOrder)
+            //{
+            //    ProductVM productVM = new ProductVM();
+            //    productVM.Product = item;
+            //    productVM.Images = imageFactory.GetBy("ProductID", item.ID);
+            //    productVM.Category = categoryFactory.Get(item.CategoryID);
+
+            //    products.Add(productVM);
+            //}
+
+            List<ProductAmountVM> products = new List<ProductAmountVM>();
+            foreach (List<Product> item in cart.GetShoppingCart())
             {
                 ProductVM productVM = new ProductVM();
-                productVM.Product = item;
-                productVM.Images = imageFactory.GetBy("ProductID", item.ID);
-                productVM.Category = categoryFactory.Get(item.CategoryID);
+                productVM.Product = item[0];
+                productVM.Images = imageFactory.GetBy("ProductID", item[0].ID);
+                productVM.Category = categoryFactory.Get(item[0].CategoryID);
 
-                products.Add(productVM);
+                ProductAmountVM pavm = new ProductAmountVM()
+                {
+                    ProductVM = productVM,
+                    Amount = item.Count
+                };
+
+                products.Add(pavm);
             }
 
+
             emailClient.SendInvoice(order, products);
+            #endregion
+
+
             return RedirectToAction("OrderConfirmation");
         }
 
         public ActionResult OrderConfirmation()
         {
+            cart.Clear();
             return View();
         }
         #endregion

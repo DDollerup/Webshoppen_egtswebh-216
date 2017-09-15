@@ -1,0 +1,161 @@
+﻿@model OrderVM
+@{
+    ViewBag.Title = "ShowOrder";
+}
+
+<div class="container">
+    <div class="col-12">
+        <h2>Show Order : @Model.Order.ID</h2>
+    </div>
+    <div class="col-12">
+        <h3>
+            Customer Information
+        </h3>
+    </div>
+    <div class="col-6">
+        <h4>
+            Billing Information
+        </h4>
+        <table>
+            <tr>
+                <td>
+                    Full Name
+                </td>
+                <td>
+                    @Model.Order.Fullname
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Phone Number
+                </td>
+                <td>
+                    @Model.Order.Phone
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Email
+                </td>
+                <td>
+                    @Model.Order.Email
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Address
+                </td>
+                <td>
+                    @Model.Order.Address
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Postal Code
+                </td>
+                <td>
+                    @Model.Order.Postal
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    City
+                </td>
+                <td>
+                    @Model.Order.City
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-6">
+        <h4>
+            Delivery Information
+        </h4>
+        <table>
+            <tr>
+                <td>
+                    Full Name
+                </td>
+                <td>
+                    @Model.Order.Fullname_Delivery
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Phone Number
+                </td>
+                <td>
+                    @Model.Order.Phone_Delivery
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Email
+                </td>
+                <td>
+                    @Model.Order.Email_Delivery
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Address
+                </td>
+                <td>
+                    @Model.Order.Address_Delivery
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Postal Code
+                </td>
+                <td>
+                    @Model.Order.Postal_Delivery
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    City
+                </td>
+                <td>
+                    @Model.Order.City_Delivery
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-12">
+        <table>
+            <tr>
+                <th>
+                    Image
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Amount
+                </th>
+                <th>
+                    Price
+                </th>
+            </tr>
+            @foreach (ProductAmountVM pvm in Model.Products)
+            {
+                <tr>
+                    <td>
+                        <img src="~/Content/Images/@pvm.ProductVM.Images[0].ImageURL" class="img-responsive" />
+                    </td>
+                    <td>
+                        @pvm.ProductVM.Product.Name
+                    </td>
+                    <td>
+                        @pvm.Amount
+                    </td>
+                    <td>
+                        @pvm.ProductVM.Product.GetPrice() DKK
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
