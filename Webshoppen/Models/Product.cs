@@ -8,6 +8,11 @@ namespace Webshoppen.Models
 {
     public class Product
     {
+        public Product()
+        {
+            CategoryID = 0;
+        }
+
         public int ID { get; set; }
         public string Name { get; set; }
         [AllowHtml]

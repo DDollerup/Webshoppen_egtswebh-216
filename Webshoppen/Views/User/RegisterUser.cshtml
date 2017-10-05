@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "Register User";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2>Register as a User</h2>
+        </div>
+
+        <form action="/User/RegisterUserSubmit" method="post">
+            <div class="col-6">Email</div>
+            <div class="col-6"><input required type="email" name="Email" /></div>
+
+            <div class="col-6">Password</div>
+            <div class="col-6"><input required type="password" name="Password" /></div>
+
+            <div class="col-6">Firstname</div>
+            <div class="col-6"><input required type="text" name="Firstname" /></div>
+
+            <div class="col-6">Lastname</div>
+            <div class="col-6"><input required type="text" name="Lastname" /></div>
+
+            <div class="col-6">Phone</div>
+            <div class="col-6"><input required type="text" name="Phone" /></div>
+
+            <div class="col-6">Address</div>
+            <div class="col-6"><input required type="text" name="Address" /></div>
+
+            <div class="col-6">City</div>
+            <div class="col-6"><input required type="text" name="City" /></div>
+
+            <div class="col-6">Postal</div>
+            <div class="col-6"><input required type="text" name="Postal" /></div>
+
+            <div class="col-12"><input type="submit" value="Register!" /></div>
+        </form>
+    </div>
+</div>

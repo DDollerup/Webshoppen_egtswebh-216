@@ -16,10 +16,68 @@
                     <div class="col-2">
                         <img src="http://via.placeholder.com/150x70" class="img-responsive" />
                     </div>
-                    <div class="col-8">
+                    <div class="col-4">
                         <h1>
                             Webshoppen
                         </h1>
+                    </div>
+                    <div class="col-4">
+                        @if (Session["User"] == null)
+                        {
+                            <form action="/User/Login" method="post">
+                                <div style="border: 1px solid #808080;">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            Email
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="email" name="email" required />
+                                        </div>
+
+                                        <div class="col-6">
+                                            Password
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="password" name="password" required />
+                                        </div>
+                                        <div class="col-12">
+                                            <input type="submit" value="Login" />
+                                        </div>
+                                        <div class="col-12">
+                                            <span>Not a user?</span>
+                                            <br />
+                                            <a href="/User/RegisterUser">Click Here!</a>
+                                        </div>
+                                        @if (TempData["LoginError"] != null)
+                                        {
+                                            <div class="col-12">
+                                                @TempData["LoginError"]
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-12">
+                                                <br />
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <div style="border: 1px solid #808080;">
+                                <div class="row">
+                                    <div class="col-12">
+                                        Hello, @(((User)Session["User"]).Firstname)
+                                    </div>
+                                    <div class="col-12">
+                                        <a href="/User/Logout">Logout</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
                     <div class="col-2">
                         <div id="main-shoppingCart">

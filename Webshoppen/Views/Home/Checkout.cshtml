@@ -1,6 +1,8 @@
 ﻿@model List<List<ProductVM>>
 @{
     ViewBag.Title = "Checkout";
+
+    User user = (User)Session["User"];
 }
 
 <h2>Checkout</h2>
@@ -35,7 +37,7 @@
                                 Full Name
                             </td>
                             <td>
-                                <input type="text" placeholder="Full Name.." id="bill-fullname" onkeyup="fillField('#bill-fullname','#cinfo-fullname')" onchange="fillField('#bill-fullname','#cinfo-fullname')" />
+                                <input type="text" placeholder="Full Name.." id="bill-fullname" value="@(user != null ? user.Fullname() : "")" onkeyup="fillField('#bill-fullname','#cinfo-fullname')" onchange="fillField('#bill-fullname','#cinfo-fullname')" />
                             </td>
                         </tr>
                         <tr>
@@ -43,7 +45,7 @@
                                 Phone Number
                             </td>
                             <td>
-                                <input type="text" placeholder="Phone Number.." id="bill-phone" onkeyup="fillField('#bill-phone','#cinfo-phone')" onchange="fillField('#bill-phone','#cinfo-phone')" />
+                                <input type="text" placeholder="Phone Number.." id="bill-phone" value="@(user != null ? user.Phone : "")" onkeyup="fillField('#bill-phone','#cinfo-phone')" onchange="fillField('#bill-phone','#cinfo-phone')" />
                             </td>
                         </tr>
                         <tr>
@@ -51,7 +53,7 @@
                                 Email
                             </td>
                             <td>
-                                <input type="text" placeholder="Email.." id="bill-email" onkeyup="fillField('#bill-email','#cinfo-email')" onchange="fillField('#bill-email','#cinfo-email')" />
+                                <input type="text" placeholder="Email.." id="bill-email" value="@(user != null ? user.Email : "")" onkeyup="fillField('#bill-email','#cinfo-email')" onchange="fillField('#bill-email','#cinfo-email')" />
                             </td>
                         </tr>
                         <tr>
@@ -59,7 +61,7 @@
                                 Address
                             </td>
                             <td>
-                                <input type="text" placeholder="Address.." id="bill-address" onkeyup="fillField('#bill-address','#cinfo-address')" onchange="fillField('#bill-address','#cinfo-address')" />
+                                <input type="text" placeholder="Address.." id="bill-address" value="@(user != null ? user.Address : "")" onkeyup="fillField('#bill-address','#cinfo-address')" onchange="fillField('#bill-address','#cinfo-address')" />
                             </td>
                         </tr>
                         <tr>
@@ -67,7 +69,7 @@
                                 Postal Code
                             </td>
                             <td>
-                                <input type="text" placeholder="Postal.." id="bill-postal" onkeyup="fillField('#bill-postal','#cinfo-postal')" onchange="fillField('#bill-postal','#cinfo-postal')" />
+                                <input type="text" placeholder="Postal.." id="bill-postal" value="@(user != null ? user.Postal : "")" onkeyup="fillField('#bill-postal','#cinfo-postal')" onchange="fillField('#bill-postal','#cinfo-postal')" />
                             </td>
                         </tr>
                         <tr>
@@ -75,7 +77,7 @@
                                 City
                             </td>
                             <td>
-                                <input type="text" placeholder="City.." id="bill-city" onkeyup="fillField('#bill-city','#cinfo-city')" onchange="fillField('#bill-city','#cinfo-city')" />
+                                <input type="text" placeholder="City.." id="bill-city" value="@(user != null ? user.City : "")" onkeyup="fillField('#bill-city','#cinfo-city')" onchange="fillField('#bill-city','#cinfo-city')" />
                             </td>
                         </tr>
                         <tr>
@@ -282,20 +284,20 @@
                 </tr>
                 @foreach (List<ProductVM> list in Model)
                 {
-                <tr>
-                    <td>
-                        <img class="img-responsive" src="~/Content/Images/@list[0].Images[0].ImageURL" />
-                    </td>
-                    <td>
-                        <strong>@list[0].Product.Name</strong>
-                    </td>
-                    <td>
-                        @list.Count();
-                    </td>
-                    <td>
-                        <strong>@list[0].Product.GetPrice()</strong>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <img class="img-responsive" src="~/Content/Images/@list[0].Images[0].ImageURL" />
+                        </td>
+                        <td>
+                            <strong>@list[0].Product.Name</strong>
+                        </td>
+                        <td>
+                            @list.Count();
+                        </td>
+                        <td>
+                            <strong>@list[0].Product.GetPrice()</strong>
+                        </td>
+                    </tr>
                 }
             </table>
         </div>
@@ -354,6 +356,13 @@
             })
         }
 
+        function fillAnyway(from, target) {
+            var _from = $(from);
+            var _target = $(target);
+
+            _target.html(_from.val());
+        }
+
         function finishCheckout() {
             var _form = $("#checkout-form");
 
@@ -387,5 +396,11 @@
 
             _form.submit();
         }
+
+        @if (user != null)
+        {
+            @: fillAnyway('#bill-fullname', '#cinfo-fullname'); fillAnyway('#bill-phone', '#cinfo-phone'); fillAnyway('#bill-email', '#cinfo-email'); fillAnyway('#bill-address', '#cinfo-address'); fillAnyway('#bill-postal', '#cinfo-postal'); fillAnyway('#bill-city', '#cinfo-city');
+        }
+
     </script>
 }

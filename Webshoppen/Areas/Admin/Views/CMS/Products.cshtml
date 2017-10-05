@@ -7,6 +7,12 @@
     <div class="col-12">
         <h2>Products</h2>
     </div>
+    @if (TempData["MSG"] != null)
+    {
+        <p>
+            @TempData["MSG"]
+        </p>
+    }
     <div class="col-12">
         <table>
             <tr>
@@ -45,8 +51,8 @@
                     </td>
                     <td>
                         <a href="/Home/ShowProduct/@vm.Product.ID" target="_blank">View</a>
-                        <a href="#">Edit</a>
-                        <a href="#">Delete</a>
+                        <a href="/Admin/CMS/EditProduct/@vm.Product.ID">Edit</a>
+                        <a href="/Admin/CMS/DeleteProduct/@vm.Product.ID" onclick="return confirm('Are you sure?')">Delete</a>
                     </td>
                 </tr>
             }

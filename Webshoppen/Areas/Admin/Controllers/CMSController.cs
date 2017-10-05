@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Webshoppen.Factories;
 using Webshoppen.Models;
 
 namespace Webshoppen.Areas.Admin.Controllers
 {
+    [Authorize]
     public class CMSController : Controller
     {
         ProductFactory productFactory = new ProductFactory();
@@ -18,7 +20,40 @@ namespace Webshoppen.Areas.Admin.Controllers
         StatusFactory statusFactory = new StatusFactory();
         OrderStatusFactory orderStatusFactory = new OrderStatusFactory();
 
-        // GET: Admin/CMS
+        #region Login
+        [AllowAnonymous]
+        public ActionResult Login(string returnurl)
+        {
+            Session["ReturnURL"] = returnurl;
+            return View();
+        }
+
+        [AllowAnonymous, ValidateAntiForgeryToken, HttpPost]
+        public ActionResult LoginSubmit(string username, string password)
+        {
+            if (username == "abe" && password == "123")
+            {
+                FormsAuthentication.SetAuthCookie(username, false);
+
+                string returnURL = Session["ReturnURL"]?.ToString();
+                if (returnURL == null)
+                {
+                    returnURL = "/Admin/CMS/Index";
+                }
+
+                return Redirect(returnURL);
+            }
+            TempData["MSG"] = "Wrong username or password.";
+            return RedirectToAction("Login");
+        }
+        
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Login");
+        }
+        #endregion
+
         public ActionResult Index()
         {
             return View();
@@ -84,7 +119,6 @@ namespace Webshoppen.Areas.Admin.Controllers
             return View();
         }
 
-
         [HttpPost]
         public ActionResult AddProductSubmit(Product product, List<int> imageIDs)
         {
@@ -97,12 +131,121 @@ namespace Webshoppen.Areas.Admin.Controllers
                     Image img = imageFactory.Get(imageIDs[i]);
                     img.ProductID = productID;
                     imageFactory.Update(img);
-                } 
+                }
             }
 
             TempData["MSG"] = "A product has been added.";
 
             return RedirectToAction("Products");
+        }
+
+        public ActionResult EditProduct(int id = 0)
+        {
+            if (id == 0) return RedirectToAction("Products");
+            ViewBag.Categories = categoryFactory.GetAll();
+
+            List<Image> images = new List<Image>();
+            images.AddRange(imageFactory.GetBy("ProductID", 0));
+            images.AddRange(imageFactory.GetBy("ProductID", id));
+            ViewBag.Images = images;
+
+            Product p = productFactory.Get(id);
+
+            return View(p);
+        }
+
+        [HttpPost]
+        public ActionResult EditProductSubmit(Product p, List<int> imageIDs)
+        {
+            productFactory.Update(p);
+
+            if (imageIDs?.Count > 0)
+            {
+                for (int i = 0; i < imageIDs.Count; i++)
+                {
+                    Image img = imageFactory.Get(imageIDs[i]);
+                    img.ProductID = p.ID;
+                    imageFactory.Update(img);
+                }
+            }
+
+            foreach (Image img in imageFactory.GetBy("ProductID", p.ID))
+            {
+                if (imageIDs.Contains(img.ID))
+                {
+                    continue;
+                }
+                img.ProductID = 0;
+                imageFactory.Update(img);
+            }
+
+            TempData["MSG"] = "The product: " + p.Name + " has been updated.";
+            return RedirectToAction("Products");
+        }
+
+        public ActionResult DeleteProduct(int id)
+        {
+            productFactory.Delete(id);
+
+            foreach (Image img in imageFactory.GetBy("ProductID", id))
+            {
+                img.ProductID = 0;
+                imageFactory.Update(img);
+            }
+
+            TempData["MSG"] = "A product with ID: " + id + " has been deleted.";
+            return RedirectToAction("Products");
+        }
+        #endregion
+
+        #region Images
+        public ActionResult Images()
+        {
+            List<ImageVM> images = new List<ImageVM>();
+            foreach (Image img in imageFactory.GetAll())
+            {
+                ImageVM imv = new ImageVM();
+                imv.Image = img;
+
+                if (img.ProductID != 0)
+                {
+                    imv.Product = productFactory.Get(img.ProductID);
+                }
+
+                if (img.CategoryID != 0)
+                {
+                    imv.Category = categoryFactory.Get(img.CategoryID);
+                }
+
+                images.Add(imv);
+            }
+
+            return View(images);
+        }
+
+        [HttpPost]
+        public ActionResult UploadImagesSubmit(List<HttpPostedFileBase> images)
+        {
+            foreach (HttpPostedFileBase image in images)
+            {
+                string fileName = "";
+                if (Upload.Image(image, Request.PhysicalApplicationPath + @"/Content/Images/", out fileName))
+                {
+                    Upload.Image(image, Request.PhysicalApplicationPath + @"/Content/Images/", "tn_"+ fileName, 400);
+
+                    Image imgToDatabase = new Image();
+                    imgToDatabase.ImageURL = fileName;
+                    imgToDatabase.CategoryID = 0;
+                    imgToDatabase.ProductID = 0;
+                    imgToDatabase.SubpageID = 0;
+
+                    imageFactory.Insert(imgToDatabase);
+
+                    TempData["MSG"] = "Image(s) has been uploaded.";
+
+                }
+            }
+            return Redirect(Request.UrlReferrer.PathAndQuery);
         }
         #endregion
 

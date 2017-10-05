@@ -1,0 +1,85 @@
+﻿@model List<ImageVM>
+@{
+    ViewBag.Title = "Images";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-3">
+                    <h3>Upload Images</h3>
+                </div>
+                <form action="/Admin/CMS/UploadImagesSubmit" method="post" enctype="multipart/form-data">
+                    <div class="col-6">
+                        <input type="file" multiple name="images" required />
+                    </div>
+                    <div class="col-3">
+                        <input type="submit" value="Upload Images" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-12">
+            <h2>Images</h2>
+        </div>
+        <div class="col-12">
+            <h3>
+                Images with an Assigned Product
+            </h3>
+        </div>
+        <div class="col-12">
+            <div class="row">
+                @foreach (ImageVM imv in Model.Where(x => x.Product != null))
+                {
+                    <div class="col-4">
+                        <img class="img-responsive" src="~/Content/Images/@imv.Image.ImageURL" />
+                        <p>
+                            Assigned Product: @imv.Product.Name
+                        </p>
+                        <p>
+                            <a href="/Home/ShowProduct/@imv.Product.ID" target="_blank">Show Product</a>
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-12">
+            <h3>
+                Images with an Assigned Category
+            </h3>
+        </div>
+        <div class="col-12">
+            <div class="row">
+                @foreach (ImageVM imv in Model.Where(x => x.Category != null))
+                {
+                    <div class="col-4">
+                        <img class="img-responsive" src="~/Content/Images/@imv.Image.ImageURL" />
+                        <p>
+                            Assigned Category: @imv.Category.Name
+                        </p>
+                        <p>
+                            <a href="/Home/Products/@imv.Category.ID" target="_blank">Show Category</a>
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-12">
+            <h3>
+                Images with Nothing Assigned
+            </h3>
+        </div>
+        <div class="col-12">
+            <div class="row">
+                @foreach (ImageVM imv in Model.Where(x => x.Product == null && x.Category == null))
+                {
+                    <div class="col-4">
+                        <img class="img-responsive" src="~/Content/Images/@imv.Image.ImageURL" />
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

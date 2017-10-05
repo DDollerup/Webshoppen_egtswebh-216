@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+<div class="row">
+    <br />
+    <br />
+    <br />
+    <div class="col-4">
+    </div>
+    <div class="col-4">
+        <div style="border:1px solid #808080">
+            <form action="/Admin/CMS/LoginSubmit" method="post">
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-12">
+                        <h5>Login</h5>
+                    </div>
+                    <div class="col-6">
+                        Username
+                    </div>
+                    <div class="col-6">
+                        <input type="text" name="username" required />
+                    </div>
+                    <div class="col-6">
+                        Password
+                    </div>
+                    <div class="col-6">
+                        <input type="password" name="password" required />
+                    </div>
+                    <div class="col-12">
+                        <input type="submit" value="Login" />
+                    </div>
+                </div>
+            </form>
+            <br />
+        </div>
+    </div>
+    <div class="col-4">
+    </div>
+</div>

@@ -38,4 +38,58 @@
             </tr>
         </table>
     </div>
+    <div class="col-12">
+        <form action="/Home/PublishComment" method="post">
+            <table>
+                <tr>
+                    <th>
+                        User
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Comment
+                    </th>
+                </tr>
+                @if (ViewBag.Comments.Count <= 0)
+                {
+                    <tr>
+                        <td colspan="3">
+                            <i>
+                                No Comments.
+                            </i>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (CommentVM cmv in ViewBag.Comments)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@((cmv.User.ID == 0 ? "Anonymous" : cmv.User.Firstname + " " + cmv.User.Lastname))</strong>
+                            </td>
+                            <td>
+                                @cmv.Comment.Date
+                            </td>
+                            <td>
+                                @cmv.Comment.Content
+                            </td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td colspan="2">
+                        <textarea name="content"></textarea>
+                    </td>
+                    <td>
+                        <input type="hidden" name="productID" value="@Model.Product.ID" />
+                        <input type="hidden" name="userID" value="@((Session["User"] != null ? ((User)Session["User"]).ID : 0))" />
+                        <input type="submit" value="Send" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
 </div>

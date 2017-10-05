@@ -1,0 +1,105 @@
+﻿@model Product
+@{
+    ViewBag.Title = "Edit Product";
+}
+<form action="/Admin/CMS/EditProductSubmit" method="post">
+    <input type="hidden" name="ID" value="@Model.ID" />
+    <div class="row">
+        <div class="col-12">
+            <h2>Edit Product</h2>
+        </div>
+        <div class="col-6">
+            <table>
+                <tr>
+                    <td>
+                        Product Name
+                    </td>
+                    <td>
+                        <input type="text" value="@Model.Name" required placeholder="Product Name..." name="Name" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Description
+                    </td>
+                    <td>
+                        <textarea name="Description">@Model.Description</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Category
+                    </td>
+                    <td>
+                        <select name="CategoryID" required>
+                            <option value="0" selected="selected" hidden="hidden">Select Category</option>
+                            @foreach (Category category in ViewBag.Categories)
+                            {
+                                if (Model.CategoryID == category.ID)
+                                {
+                                    <option value="@category.ID" selected="selected">@category.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@category.ID">@category.Name</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Date Added
+                    </td>
+                    <td>
+                        <input type="date" name="DateAdded" value="@Model.DateAdded" required placeholder="Date..." />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Price
+                    </td>
+                    <td>
+                        <input type="number" step="any" name="Price" value="@Model.Price" placeholder="Price..." required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Sale Price
+                    </td>
+                    <td>
+                        <input type="number" step="any" name="SalePrice" value="@Model.SalePrice" placeholder="Sale Price..." required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Active
+                    </td>
+                    <td>
+                        <input type="radio" value="true" name="Active" @((Model.Active == true ? "checked='checked'" : "")) required />
+                        <input type="radio" value="false" name="Active" @((Model.Active == false ? "checked='checked'" : "")) required />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                @foreach (Image image in ViewBag.Images)
+                {
+                    <div class="col-4">
+                        <img src="~/Content/Images/@image.ImageURL" class="img-responsive" />
+                        <input type="checkbox" value="@image.ID" name="imageIDs" @((image.ProductID == Model.ID ? "checked='checked'" : "")) />
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-12">
+            <input type="submit" value="Edit Product" />
+        </div>
+    </div>
+</form>
+
+@section JS{
+    <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+    <script>tinymce.init({ selector:'textarea' });</script>
+}

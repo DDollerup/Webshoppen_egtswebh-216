@@ -104,15 +104,19 @@
     <Content Include="EmailTemplates\NotificationToAdmin.html" />
     <Content Include="EmailTemplates\Notification.html" />
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\CMSController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Factories\AutoFactory.cs" />
     <Compile Include="Factories\CategoryFactory.cs" />
+    <Compile Include="Factories\CommentFactory.cs" />
     <Compile Include="Factories\DBContext.cs" />
     <Compile Include="Factories\DDMF_Full\AutoFac.cs" />
     <Compile Include="Factories\DDMF_Full\Conn.cs" />
@@ -123,13 +127,18 @@
     <Compile Include="Factories\OrderStatusFactory.cs" />
     <Compile Include="Factories\ProductFactory.cs" />
     <Compile Include="Factories\StatusFactory.cs" />
+    <Compile Include="Factories\UserFactory.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\EmailClient.cs" />
+    <Compile Include="Helpers\Upload.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\CategoryVM.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\CommentVM.cs" />
     <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\ImageVM.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderCollection.cs" />
     <Compile Include="Models\OrderStatus.cs" />
@@ -139,6 +148,7 @@
     <Compile Include="Models\ProductAmountVM.cs" />
     <Compile Include="Models\ProductVM.cs" />
     <Compile Include="Models\Status.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShoppingCart\ProductCart.cs" />
     <Compile Include="ShoppingCart\ShoppingCart _v2.cs" />
@@ -154,6 +164,9 @@
     <Content Include="Areas\Admin\Views\CMS\AddProduct.cshtml" />
     <Content Include="Areas\Admin\Views\CMS\Orders.cshtml" />
     <Content Include="Areas\Admin\Views\CMS\ShowOrder.cshtml" />
+    <Content Include="Areas\Admin\Views\CMS\EditProduct.cshtml" />
+    <Content Include="Areas\Admin\Views\CMS\Login.cshtml" />
+    <Content Include="Areas\Admin\Views\CMS\Images.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\Shared\_MainLayout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -168,6 +181,7 @@
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Views\Home\Checkout.cshtml" />
     <Content Include="Views\Home\OrderConfirmation.cshtml" />
+    <Content Include="Views\User\RegisterUser.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

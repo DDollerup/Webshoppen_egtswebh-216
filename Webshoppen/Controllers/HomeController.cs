@@ -18,6 +18,8 @@ namespace Webshoppen.Controllers
         OrderCollectionFactory orderCollectionFactory = new OrderCollectionFactory();
         StatusFactory statusFactory = new StatusFactory();
         OrderStatusFactory orderStatusFactory = new OrderStatusFactory();
+        CommentFactory commentFactory = new CommentFactory();
+        UserFactory userFactory = new UserFactory();
 
         // ShoppingCart
         ProductCart cart;
@@ -119,6 +121,22 @@ namespace Webshoppen.Controllers
                 vm.Product = productFactory.Get(id);
                 vm.Images = imageFactory.GetBy("ProductID", id);
                 vm.Category = categoryFactory.Get(vm.Product.CategoryID);
+
+                List<CommentVM> comments = new List<CommentVM>();
+                foreach (Comment comment in commentFactory.GetBy("ProductID", id))
+                {
+                    CommentVM cmv = new CommentVM();
+                    cmv.Comment = comment;
+                    cmv.User = userFactory.Get(comment.UserID);
+
+                    comments.Add(cmv);
+                }
+
+                comments = comments.OrderBy(x => DateTime.Parse(x.Comment.Date)).ToList();
+                comments.Reverse();
+                
+                ViewBag.Comments = comments;
+
                 return View(vm);
             }
             else
@@ -296,6 +314,22 @@ namespace Webshoppen.Controllers
         {
             cart.Clear();
             return View();
+        }
+        #endregion
+
+        #region Comments
+        [HttpPost]
+        public ActionResult PublishComment(string content, int productID, int userID)
+        {
+            Comment comment = new Comment();
+            comment.UserID = userID;
+            comment.ProductID = productID;
+            comment.Date = DateTime.Now.ToString();
+            comment.Content = content;
+
+            commentFactory.Insert(comment);
+
+            return Redirect(Request.UrlReferrer.PathAndQuery);
         }
         #endregion
     }
